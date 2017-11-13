@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        .open_map {
+            width: 100%;
+            padding: 0 30px;
+            height: 50px;
+            line-height: 50px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .clsoe_map {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+            background-color: #ff0;
+            z-index: 900;
+            display: none;
+        }
+
+        .auto_location {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+            background-color: #0ff;
+            z-index: 900;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="open_map" onclick="openMap();">打开高德地图</div>
+    <div class="clsoe_map" id="closemap" onclick="closeMap();">关闭高德地图</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    var aMap;
+    var closeamap = $api.byId('closemap');
+    apiready = function() {
+        aMap = api.require('aMap');
+    };
+
+    function openMap() {
+        $api.css(closeamap, 'display:block');
+        aMap.open({
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            showUserLocation: true,
+            zoomLevel: 16,
+            fixedOn: api.frameName,
+            fixed: false
+        }, function(ret, err) {
+            if (!ret.status) {
+                alert('地图加载失败!');
+            } else {
+                aMap.getLocation(function(ret, err) {
+                    if (ret.status) {
+                        aMap.setCenter({
+                            coords: {
+                                lon: ret.lon,
+                                lat: ret.lat
+                            },
+                            animation: true
+                        });
+                        aMap.setZoomLevel({
+                            level: 16,
+                            animation: true
+                        });
+                    } else {
+                        alert(JSON.stringify(err));
+                    }
+                });
+            };
+        });
+    };
+
+    function closeMap() {
+        aMap.close();
+    }
+</script>
+
+</html>
