@@ -4,68 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>Hello APP</title>
-    <link rel="stylesheet" type="text/css" href="./css/api.css" />
-    <style type="text/css">
-    html,body{
-        height: 100%;
-        background-color: #fff;
-    }
-    #wrap{
-        height: 100%;
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-box-orient: vertical;
-        -webkit-flex-flow: column;
-               flex-flow: column;
-    }
-    #header{
-        text-align: center;
-        color: #fff;
-        width: 100%;
-        padding-top:10px;
-    }
-    #header h1{
-        background-color: rgba(248,125,4,.5);
-        font-size: 20px;
-        height: 50px;
-        line-height: 50px;
-        color: #fff;
-        text-align: center;
-        margin: 0 10px;
-        border-radius: 4px;
-    }
-    </style>
+    <title>Yoohoohoo Index</title>
 </head>
 <body>
-    <div id="wrap">
-        <div id="header">
-            <h1>YooHooHoo App</h1>
-        </div>
-    </div>
 </body>
-<script type="text/javascript" src="./script/api.js"></script>
 <script type="text/javascript">
     apiready = function(){
-
-        var header = $api.byId('header');
-        //适配iOS 7+，Android 4.4+状态栏
-        $api.fixStatusBar(header);
-
-        var headerPos = $api.offset(header);
-        api.openFrame({
+        api.openWin({
             name: 'main',
-            url: 'html/main.html',
-            bounces: true,
-            rect: {
-                x: 0,
-                y: headerPos.h,
-                w: 'auto',
-                h: 'auto'
-            }
+            url: './html/main.html',
+            bounces: false
         });
-
     };
 </script>
 </html>

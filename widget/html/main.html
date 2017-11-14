@@ -1,64 +1,115 @@
 <!DOCTYPE HTML>
 <html>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
-    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>Hello APP</title>
-    <link rel="stylesheet" type="text/css" href="../css/api.css" />
-    <style>
-        .open_map {
-            width: 100%;
-            padding: 0 30px;
-            height: 50px;
-            line-height: 50px;
-            border-bottom: 1px solid #ccc;
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" name="viewport"/>
+        <meta content="telephone=no,email=no,date=no,address=no" name="format-detection"/>
+        <title>
+        </title>
+        <link href="../css/api.css" rel="stylesheet" type="text/css"/>
+        <style>
+            html,body{
+            height: 100%;
         }
-
-        .clsoe_map {
+        body{
+            display: -webkit-box-flex;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow:column;
+        }
+        .header{
+            height: 45px;
+            background-color: #fff;
+        }
+        .header_box{
+            position: relative;
+        }
+        .header_box .menu{
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            height: 40px;
-            line-height: 40px;
-            background-color: #ff0;
-            z-index: 900;
-            display: none;
+            height: 45px;width: 45px;
+            background: url(../image/main_menu.png) no-repeat center center;
+            background-size: auto 17px;
+        }    
+        .header_box .logo{
+            height: 45px;width: 90px;
+            margin: 0 auto;
+            background: url(../image/logo.png) no-repeat center center;
+            background-size: auto 20px;
+
         }
 
-        .auto_location {
-            position: absolute;
-            bottom: 40px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            height: 40px;
-            line-height: 40px;
-            background-color: #0ff;
-            z-index: 900;
-            display: none;
+        .warp{
+            -webkit-box-flex:1;
+            -webkit-flex:1;
+            flex:1;
+            position: relative;
         }
-    </style>
-</head>
-
-<body>
-    <div class="open_map" onclick="openMap();">打开高德地图</div>
-    <div class="clsoe_map" id="closemap" onclick="closeMap();">关闭高德地图</div>
-</body>
-<script type="text/javascript" src="../script/api.js"></script>
-<script type="text/javascript">
-    var aMap;
-    var closeamap = $api.byId('closemap');
-    apiready = function() {
+        
+        </style>
+    </head>
+    <body>
+        <header class="header" id="header">
+            <div class="header_box">
+                <div class="menu">
+                </div>
+                <div class="logo">
+                </div>
+            </div>
+        </header>
+        <div class="warp" id="warp">
+        </div>
+        <div class="message_list" id="messageList">
+            <div class="option_arrow">
+            </div>
+        </div>
+    </body>
+    <script src="../script/api.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+        var header,headerH,aMap;
+    apiready = function(){
+        header=$api.byId('header');
         aMap = api.require('aMap');
+        $api.fixStatusBar(header);
+        headerH=$api.offset(header).h;
+        api.setStatusBarStyle({
+            style: 'dark'
+        });
+        fnInitMap();
+        openMap();
+        fnInitMessageScroll();
+        setMapCenter();
+        fnInitMapZoom();
+        fnInitMessageBtn();
+        fnInitMessageBox();
     };
 
-    function openMap() {
-        $api.css(closeamap, 'display:block');
-        aMap.open({
+    function fnInitMap(){
+        api.openFrame({
+            name: 'home_frame',
+            url: './home_frame.html',
+            rect: {
+                x: 0,
+                y: headerH,
+                w: 'auto',
+                h: api.winHeight-headerH
+            },
+            bounces: false
+        });
+    };
+
+    function openMap(){
+        aMap.getLocation(function(ret, err) {
+            if (ret.status) {
+                _openmap(ret.lon,ret.lat);
+            } else {
+                _openmap(116.4021310000,39.9994480000);
+            }
+        });
+
+        function _openmap(lon,lat){
+            aMap.open({
             rect: {
                 x: 0,
                 y: 0,
@@ -67,36 +118,108 @@
             },
             showUserLocation: true,
             zoomLevel: 16,
-            fixedOn: api.frameName,
-            fixed: false
-        }, function(ret, err) {
-            if (!ret.status) {
-                alert('地图加载失败!');
-            } else {
-                aMap.getLocation(function(ret, err) {
-                    if (ret.status) {
-                        aMap.setCenter({
-                            coords: {
-                                lon: ret.lon,
-                                lat: ret.lat
-                            },
-                            animation: true
-                        });
-                        aMap.setZoomLevel({
-                            level: 16,
-                            animation: true
-                        });
-                    } else {
-                        alert(JSON.stringify(err));
-                    }
-                });
-            };
+            center: {
+                lon: lon,
+                lat: lat
+            },
+            fixedOn: 'home_frame',
+            fixed: true
+            });
+
+            aMap.addMobileAnnotations({
+            annotations: [{
+                id: 10,
+                lon: lon,
+                lat: lat,
+                icon: 'widget://image/logo.png',
+                draggable: false
+            }]
+        });
+        };
+
+        
+    };
+    
+    function fnInitMessageScroll(){
+        api.openFrame({
+            name: 'message_scroll_frame',
+            url: './message_scroll_frame.html',
+            rect: {
+                x: 0,
+                y: headerH+13,
+                w: 'auto',
+                h: 32
+            },
+            bounces: false
+        });
+        api.bringFrameToFront({
+            from: 'map_frame'
+        });
+    };
+    function fnInitMessageBtn(){
+        api.openFrame({
+            name: 'message_btn_frame',
+            url: './message_btn_frame.html',
+            rect: {
+                x: 0,
+                y: api.winHeight-75,
+                w: 'auto',
+                h: 45
+            },
+            bounces: false
+        });
+        api.bringFrameToFront({
+            from: 'map_frame'
+        });
+    };
+    function fnInitMessageBox(){
+        api.openFrame({
+            name: 'message_box_frame',
+            url: './message_box_frame.html',
+            rect: {
+                x: 0,
+                y: api.winHeight-15,
+                w: 'auto',
+                h: 15
+            },
+            bounces: false
+        });
+        api.bringFrameToFront({
+            from: 'message_btn_frame'
         });
     };
 
-    function closeMap() {
-        aMap.close();
-    }
-</script>
-
+    function setMapCenter(){
+        api.openFrame({
+            name: 'map_center_frame',
+            url: './map_center_frame.html',
+            rect: {
+                x: 0,
+                y: api.winHeight-122,
+                w: 60,
+                h: 48
+            },
+            bounces: false
+        });
+        api.bringFrameToFront({
+            from: 'map_frame'
+        });
+    };    
+    function fnInitMapZoom(){
+        api.openFrame({
+            name: 'map_zoom_frame',
+            url: './map_zoom_frame.html',
+            rect: {
+                x: api.winWidth-60,
+                y: api.winHeight-170,
+                w: 60,
+                h: 88
+            },
+            bounces: false
+        });
+        api.bringFrameToFront({
+            from: 'map_frame'
+        });
+    };
+    </script>
 </html>
