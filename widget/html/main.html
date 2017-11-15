@@ -8,7 +8,7 @@
         </title>
         <link href="../css/api.css" rel="stylesheet" type="text/css"/>
         <style>
-            html,body{
+        html,body{
             height: 100%;
         }
         body{
@@ -83,6 +83,8 @@
         fnInitMapZoom();
         fnInitMessageBtn();
         fnInitMessageBox();
+        addBackCenterListener();
+        addChangeZoomListener();
     };
 
     function fnInitMap(){
@@ -107,37 +109,30 @@
                 _openmap(116.4021310000,39.9994480000);
             }
         });
+    };
 
-        function _openmap(lon,lat){
-            aMap.open({
-            rect: {
-                x: 0,
-                y: 0,
-                w: 'auto',
-                h: 'auto'
-            },
-            showUserLocation: true,
-            zoomLevel: 16,
-            center: {
-                lon: lon,
-                lat: lat
-            },
-            fixedOn: 'home_frame',
-            fixed: true
-            });
-
-            aMap.addMobileAnnotations({
-            annotations: [{
-                id: 10,
-                lon: lon,
-                lat: lat,
-                icon: 'widget://image/logo.png',
-                draggable: false
-            }]
+    function _openmap(lon,lat){
+        aMap.open({
+        rect: {
+            x: 0,
+            y: 0,
+            w: 'auto',
+            h: 'auto'
+        },
+        showUserLocation: true,
+        zoomLevel: 16,
+        center: {
+            lon: lon,
+            lat: lat
+        },
+        fixedOn: 'home_frame',
+        fixed: true
         });
-        };
 
-        
+        aMap.showUserLocation({
+            isShow: true
+        });
+    
     };
     
     function fnInitMessageScroll(){
@@ -221,5 +216,55 @@
             from: 'map_frame'
         });
     };
+
+    function addBackCenterListener(){
+        api.addEventListener({
+            name: 'backCurrentPosition'
+        }, function(ret, err) {
+            aMap.setZoomLevel({
+                level: 16
+            });
+            aMap.getLocation(function(ret, err) {
+                if (ret.status) {
+                    aMap.setCenter({
+                        coords: {
+                            lon: ret.lon,
+                            lat: ret.lat
+                        }
+                    });
+
+                } else {
+                    alert("定位失败!");
+                }
+            });
+            
+        });
+    };
+    function addChangeZoomListener(){
+        api.addEventListener({
+            name: 'changeZoom'
+        }, function(ret, err) {
+            var option=ret.value.option;
+            var zoom=0;
+            aMap.getZoomLevel(function(ret, err) {
+                zoom=ret.level;
+                zoom+=option;
+
+                aMap.setZoomLevel({
+                    level: zoom,
+                    animation: true
+                });
+
+                api.execScript({
+                    name:'main',
+                    frameName: 'map_zoom_frame',
+                    script: 'zoomChangeClass("'+zoom+'")'
+                }); 
+            });
+            
+        });
+    };
+
+
     </script>
 </html>

@@ -4,10 +4,11 @@
         <meta charset="utf-8"/>
         <meta content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" name="viewport"/>
         <meta content="telephone=no,email=no,date=no,address=no" name="format-detection"/>
-        <title></title>
+        <title>
+        </title>
         <link href="../css/api.css" rel="stylesheet" type="text/css"/>
         <style type="text/css">
-        	html,body{
+            html,body{
 	        	height: 100%;
 	        	background-color: transparent;
 	        }
@@ -21,16 +22,27 @@
 	            border-radius: 50%;
 	            box-shadow: 0 3px 5px -1px #aaa;
 	        }
+	        .active{
+	        	background-color: #ccc;
+	        }
         </style>
     </head>
     <body>
-    	<div class="map_center"></div>
+        <div class="map_center" tapmode="active" onclick="fnInitMapCenter()">
+        </div>
     </body>
     <script src="../script/api.js" type="text/javascript">
     </script>
     <script type="text/javascript">
+    	
         apiready = function(){
         	
-    	}
+    	};
+    	
+    	function fnInitMapCenter(){
+    		api.sendEvent({
+    		    name: 'backCurrentPosition'
+    		});
+    	};
     </script>
 </html>

@@ -22,7 +22,19 @@
         </style>
     </head>
     <body>
-        <div class="post_btn">
+        <div class="post_btn" tapmode onclick="openAddMessageWin()">
         </div>
     </body>
+    <script type="text/javascript">
+        function openAddMessageWin(){
+            api.openWin({
+                name: 'add_message',
+                url: './add_message.html',
+                animation:{
+                    type:'movein',
+                    subType :'from_bottom'
+                }
+            });
+        };
+    </script>
 </html>

@@ -35,19 +35,45 @@
 	            border-radius: 50%;
 	            box-shadow: 0 3px 5px -1px #aaa;
 	        }
+	        .active{
+	        	background-color: #ccc;
+	        }
         </style>
     </head>
     <body>
     	<div class="zoom">
-    		<div class="zoom_add"></div>
-    		<div class="zoom_reduce"></div>
+    		<div class="zoom_add" id="zoomAdd" tapmode="active" onclick="changeMapZoom(1)"></div>
+    		<div class="zoom_reduce" id="zoomReduce"  tapmode="active" onclick="changeMapZoom(-1)"></div>
     	</div>
     </body>
     <script src="../script/api.js" type="text/javascript">
     </script>
     <script type="text/javascript">
+    	var zoomAdd,zoomReduce
         apiready = function(){
-        	
-    	}
+        	zoomAdd=$api.byId('zoomAdd');
+        	zoomReduce=$api.byId('zoomReduce');
+    	};
+
+    	function changeMapZoom(option){
+    		api.sendEvent({
+    		    name: 'changeZoom',
+    		    extra: {
+    		        option:option
+    		    }
+    		});
+    	};
+    	function zoomChangeClass(zoom){
+    		if(zoom>=19){
+    			$api.addCls(zoomAdd, 'active');
+    			$api.removeCls(zoomReduce, 'active');
+    		} else if (zoom<=3){
+    			$api.addCls(zoomReduce, 'active');
+    			$api.removeCls(zoomAdd, 'active');
+    		}else{
+    			$api.removeCls(zoomAdd, 'active');
+    			$api.removeCls(zoomReduce, 'active');
+    		};
+    	};
     </script>
 </html>
