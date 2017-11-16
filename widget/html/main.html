@@ -19,7 +19,7 @@
             -webkit-flex-flow:column;
         }
         .header{
-            height: 45px;
+            height: 44px;
             background-color: #fff;
         }
         .header_box{
@@ -27,16 +27,15 @@
         }
         .header_box .menu{
             position: absolute;
-            height: 45px;width: 45px;
+            height: 44px;width: 44px;
             background: url(../image/main_menu.png) no-repeat center center;
             background-size: auto 17px;
         }    
         .header_box .logo{
-            height: 45px;width: 90px;
+            height: 44px;width: 90px;
             margin: 0 auto;
             background: url(../image/logo.png) no-repeat center center;
             background-size: auto 20px;
-
         }
 
         .warp{
@@ -44,6 +43,11 @@
             -webkit-flex:1;
             flex:1;
             position: relative;
+        }
+        .footer{
+            height: 44px;
+            background: url(../image/post_btn.png) no-repeat center center;
+            background-size: cover;
         }
         
         </style>
@@ -59,32 +63,42 @@
         </header>
         <div class="warp" id="warp">
         </div>
-        <div class="message_list" id="messageList">
-            <div class="option_arrow">
-            </div>
+        <div class="footer" id="footer" tapmode onclick="openAddMessageWin()">
         </div>
     </body>
     <script src="../script/api.js" type="text/javascript">
     </script>
     <script type="text/javascript">
-        var header,headerH,aMap;
+    var header,headerH,footer,footerH,aMap;
     apiready = function(){
         header=$api.byId('header');
+        footer=$api.byId('footer');
         aMap = api.require('aMap');
+
         $api.fixStatusBar(header);
         headerH=$api.offset(header).h;
+        footerH=$api.offset(footer).h;
         api.setStatusBarStyle({
             style: 'dark'
         });
         fnInitMap();
         openMap();
-        fnInitMessageScroll();
         setMapCenter();
         fnInitMapZoom();
-        fnInitMessageBtn();
-        fnInitMessageBox();
         addBackCenterListener();
         addChangeZoomListener();
+        fnInitMessageProfile();
+    };
+
+    function openAddMessageWin(){
+        api.openWin({
+            name: 'add_message',
+            url: './add_message.html',
+            animation:{
+                type:'movein',
+                subType :'from_bottom'
+            }
+        });
     };
 
     function fnInitMap(){
@@ -95,7 +109,7 @@
                 x: 0,
                 y: headerH,
                 w: 'auto',
-                h: api.winHeight-headerH
+                h: api.winHeight-headerH-footerH
             },
             bounces: false
         });
@@ -134,63 +148,13 @@
         });
     
     };
-    
-    function fnInitMessageScroll(){
-        api.openFrame({
-            name: 'message_scroll_frame',
-            url: './message_scroll_frame.html',
-            rect: {
-                x: 0,
-                y: headerH+13,
-                w: 'auto',
-                h: 32
-            },
-            bounces: false
-        });
-        api.bringFrameToFront({
-            from: 'map_frame'
-        });
-    };
-    function fnInitMessageBtn(){
-        api.openFrame({
-            name: 'message_btn_frame',
-            url: './message_btn_frame.html',
-            rect: {
-                x: 0,
-                y: api.winHeight-75,
-                w: 'auto',
-                h: 45
-            },
-            bounces: false
-        });
-        api.bringFrameToFront({
-            from: 'map_frame'
-        });
-    };
-    function fnInitMessageBox(){
-        api.openFrame({
-            name: 'message_box_frame',
-            url: './message_box_frame.html',
-            rect: {
-                x: 0,
-                y: api.winHeight-15,
-                w: 'auto',
-                h: 15
-            },
-            bounces: false
-        });
-        api.bringFrameToFront({
-            from: 'message_btn_frame'
-        });
-    };
-
     function setMapCenter(){
         api.openFrame({
             name: 'map_center_frame',
             url: './map_center_frame.html',
             rect: {
                 x: 0,
-                y: api.winHeight-122,
+                y: api.winHeight-200,
                 w: 60,
                 h: 48
             },
@@ -205,8 +169,8 @@
             name: 'map_zoom_frame',
             url: './map_zoom_frame.html',
             rect: {
-                x: api.winWidth-60,
-                y: api.winHeight-170,
+                x: api.winWidth-50,
+                y: api.winHeight-240,
                 w: 60,
                 h: 88
             },
@@ -265,6 +229,21 @@
         });
     };
 
-
+    function fnInitMessageProfile(){
+        api.openFrame({
+            name: 'message_profile_frame',
+            url: './message_profile_frame.html',
+            rect: {
+                x: 0,
+                y: api.winHeight-161,
+                w: 'auto',
+                h: 115
+            },
+            bounces: false
+        });
+        api.bringFrameToFront({
+            from: 'map_frame'
+        });
+    };
     </script>
 </html>
