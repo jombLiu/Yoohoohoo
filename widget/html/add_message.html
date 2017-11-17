@@ -50,9 +50,9 @@
     <body>
     	<header class="header" id="header">
     		<div class="header_box">
-    			<div class="left">取消</div>
+    			<div class="left" tapmode onclick="api.closeWin();">取消</div>
 	    		<div class="center">发布活动</div>
-	    		<div class="right">发布</div>
+	    		<div class="right" tapmode onclick="postMessage()">发布</div>
     		</div>
     	</header>
     	<div class="warp"></div>
@@ -84,5 +84,11 @@
 	            bounces: false
 	        });
 	    };
+
+        function postMessage(){
+            api.sendEvent({
+                name: 'postUserMessage'
+            });
+        };
     </script>
 </html>
