@@ -35,30 +35,38 @@
                 height: 35px;
                 line-height: 35px;
                 background-color: #f7f7f7;
+                border:1px solid #f5f5f5;
+                outline: none;
                 border-radius: 3px;
                 font-size: 14px;
                
             }
+            .title input:focus{
+                border-color: #ffa322;
+            }
         	.content{
+                box-sizing: content-box;
 	            -webkit-box-flex:1;
 	            -webkit-flex:1;
 	            flex:1;
                 margin: 10px 10px 0;
-                border:1px solid #ccc;
+                border:1px solid #f5f5f5;
                 border-radius: 3px;
                 background-color: #f7f7f7;
-                box-sizing: content-box;
-                padding-bottom: 58px;
+                position: relative;
 	        }
             .content textarea{
-                display: block;
+                position: absolute;
+                top:10px;
+                left: 3%;
+                bottom:58px;
+                right: 3%;
                 width: 94%;
-                height: 100%;
-                padding: 0 3%;
                 line-height: 20px;
                 font-size: 13px;
                 outline: none;
                 border:none;
+                resize: none;
             }
 	        .point{
 	        	background-color: #fff;
