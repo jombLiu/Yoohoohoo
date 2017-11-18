@@ -67,7 +67,7 @@
         </style>
     </head>
     <body>
-        <div class="message" tapmode onclick="">
+        <div id="123456789" class="message" tapmode onclick="openMessageDetail()">
             <div class="left">
                 <div class="user_img"></div>
                 <div class="user_name">王者荣耀</div>
@@ -78,7 +78,22 @@
             </div>
         </div>
     </body>
+    <script src="../script/api.js" type="text/javascript"></script>
     <script type="text/javascript">
-        
+        var message,messageId;
+        apiready = function(){
+            message=$api.dom(".message");
+            messageId=$api.attr(message, 'id');
+        };
+            
+        function openMessageDetail(){
+            api.openWin({
+                name: 'message_detail',
+                url: './message_detail.html',
+                pageParam: {
+                    id: messageId
+                }
+            });
+        };
     </script>
 </html>
