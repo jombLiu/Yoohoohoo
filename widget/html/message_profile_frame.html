@@ -62,12 +62,15 @@
                 line-height: 16px;
                 color: #828282;
             }
+            .active{
+                background-color: #f5f5f5;
+            }
 
 
         </style>
     </head>
     <body>
-        <div id="123456789" class="message" tapmode onclick="openMessageDetail()">
+        <div id="123456789" class="message" tapmode="active" onclick="openMessageDetail()">
             <div class="left">
                 <div class="user_img"></div>
                 <div class="user_name">王者荣耀</div>
@@ -90,6 +93,10 @@
             api.openWin({
                 name: 'message_detail',
                 url: './message_detail.html',
+                animation:{
+                    type:'movein',
+                    subType :'from_bottom'
+                },
                 pageParam: {
                     id: messageId
                 }
