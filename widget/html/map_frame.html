@@ -12,7 +12,91 @@
     <script src="../script/api.js" type="text/javascript">
     </script>
     <script type="text/javascript">
+        var aMap;
         apiready = function(){
-    	}
+            aMap = api.require('aMap');
+            openMap();
+            addBackCenterListener();
+            addChangeZoomListener();
+    	};
+
+        function openMap(){
+            aMap.getLocation(function(ret, err) {
+                if (ret.status) {
+                    _openmap(ret.lon,ret.lat);
+                } else {
+                    _openmap(116.4021310000,39.9994480000);
+                }
+            });
+        };
+
+        function _openmap(lon,lat){
+            aMap.open({
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                showUserLocation: true,
+                zoomLevel: 16,
+                center: {
+                    lon: lon,
+                    lat: lat
+                },
+                fixedOn: 'map_frame',
+                fixed: true
+            });
+        
+        };
+        
+
+        function addBackCenterListener(){
+            api.addEventListener({
+                name: 'backCurrentPosition'
+            }, function(ret, err) {
+                aMap.setZoomLevel({
+                    level: 16
+                });
+                aMap.getLocation(function(ret, err) {
+                    if (ret.status) {
+                        aMap.setCenter({
+                            coords: {
+                                lon: ret.lon,
+                                lat: ret.lat
+                            }
+                        });
+
+                    } else {
+                        alert("定位失败!");
+                    }
+                });
+                
+            });
+        };
+        function addChangeZoomListener(){
+            api.addEventListener({
+                name: 'changeZoom'
+            }, function(ret, err) {
+                var option=ret.value.option;
+                var zoom=0;
+                aMap.getZoomLevel(function(ret, err) {
+                    zoom=ret.level;
+                    zoom+=option;
+
+                    aMap.setZoomLevel({
+                        level: zoom,
+                        animation: true
+                    });
+
+                    api.execScript({
+                        name:'main',
+                        frameName: 'map_zoom_frame',
+                        script: 'zoomChangeClass("'+zoom+'")'
+                    }); 
+                });
+                
+            });
+        };
     </script>
 </html>

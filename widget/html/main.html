@@ -83,22 +83,29 @@
             style: 'dark'
         });
         fnInitMap();
-        openMap();
         setMapCenter();
         fnInitMapZoom();
-        addBackCenterListener();
-        addChangeZoomListener();
+        
         fnInitMessageProfile();
         getMessageList();
+        fnRegisterKeyBack();
+
     };
     function initOpenMenu(){
-        api.openWin({
-            name: 'menu',
-            url: './menu.html',
+        api.openFrame({
+            name: 'menu_frame',
+            url: './menu_frame.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: "auto",
+                h: "auto"
+            },
             animation:{
                 type:'movein',
                 subType :'from_left'
-            }
+            },
+            bounces: false
         });
     };
     function openAddMessageWin(){
@@ -114,8 +121,8 @@
 
     function fnInitMap(){
         api.openFrame({
-            name: 'home_frame',
-            url: './home_frame.html',
+            name: 'map_frame',
+            url: './map_frame.html',
             rect: {
                 x: 0,
                 y: headerH,
@@ -126,119 +133,38 @@
         });
     };
 
-    function openMap(){
-        aMap.getLocation(function(ret, err) {
-            if (ret.status) {
-                _openmap(ret.lon,ret.lat);
-            } else {
-                _openmap(116.4021310000,39.9994480000);
-            }
-        });
-    };
-
-    function _openmap(lon,lat){
-        aMap.open({
-        rect: {
-            x: 0,
-            y: 0,
-            w: 'auto',
-            h: 'auto'
-        },
-        showUserLocation: true,
-        zoomLevel: 16,
-        center: {
-            lon: lon,
-            lat: lat
-        },
-        fixedOn: 'home_frame',
-        fixed: true
-        });
-
-        aMap.showUserLocation({
-            isShow: true
-        });
-    
-    };
     function setMapCenter(){
-        api.openFrame({
-            name: 'map_center_frame',
-            url: './map_center_frame.html',
-            rect: {
-                x: 0,
-                y: api.winHeight-200,
-                w: 60,
-                h: 48
-            },
-            bounces: false
-        });
-        api.bringFrameToFront({
-            from: 'map_frame'
-        });
-    };    
-    function fnInitMapZoom(){
-        api.openFrame({
-            name: 'map_zoom_frame',
-            url: './map_zoom_frame.html',
-            rect: {
-                x: api.winWidth-50,
-                y: api.winHeight-240,
-                w: 60,
-                h: 88
-            },
-            bounces: false
-        });
-        api.bringFrameToFront({
-            from: 'map_frame'
-        });
-    };
-
-    function addBackCenterListener(){
-        api.addEventListener({
-            name: 'backCurrentPosition'
-        }, function(ret, err) {
-            aMap.setZoomLevel({
-                level: 16
+            api.openFrame({
+                name: 'map_center_frame',
+                url: './map_center_frame.html',
+                rect: {
+                    x: 0,
+                    y: api.winHeight-200,
+                    w: 60,
+                    h: 48
+                },
+                bounces: false
             });
-            aMap.getLocation(function(ret, err) {
-                if (ret.status) {
-                    aMap.setCenter({
-                        coords: {
-                            lon: ret.lon,
-                            lat: ret.lat
-                        }
-                    });
-
-                } else {
-                    alert("定位失败!");
-                }
+            api.bringFrameToFront({
+                from: 'map_center_frame'
             });
-            
-        });
-    };
-    function addChangeZoomListener(){
-        api.addEventListener({
-            name: 'changeZoom'
-        }, function(ret, err) {
-            var option=ret.value.option;
-            var zoom=0;
-            aMap.getZoomLevel(function(ret, err) {
-                zoom=ret.level;
-                zoom+=option;
-
-                aMap.setZoomLevel({
-                    level: zoom,
-                    animation: true
-                });
-
-                api.execScript({
-                    name:'main',
-                    frameName: 'map_zoom_frame',
-                    script: 'zoomChangeClass("'+zoom+'")'
-                }); 
+        };    
+        function fnInitMapZoom(){
+            api.openFrame({
+                name: 'map_zoom_frame',
+                url: './map_zoom_frame.html',
+                rect: {
+                    x: api.winWidth-50,
+                    y: api.winHeight-240,
+                    w: 60,
+                    h: 88
+                },
+                bounces: false
             });
-            
-        });
-    };
+            api.bringFrameToFront({
+                from: 'map_zoom_frame'
+            });
+        };
 
     function fnInitMessageProfile(){
         api.openFrame({
@@ -253,18 +179,50 @@
             bounces: false
         });
         api.bringFrameToFront({
-            from: 'map_frame'
+            from: 'message_profile_frame'
+        });
+    };
+    function fnRegisterKeyBack(){
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            api.closeWidget();
         });
     };
 
+
+
     function getMessageList(){
-        // api.ajax({
-        //     url: 'http://117.34.118.48/Yoohoohoo/activity/query',
-        //     method: 'post',
-        //     timeout:10
-        // }, function(ret, err) {
-        //     alert(JSON.stringify(ret));
-        // });
+        api.ajax({
+            url: 'http://10.0.1.139:8080/Yoohoohoo/activity/allReport',
+            method: 'post',
+            timeout:10
+        }, function(ret, err) {
+
+            if(ret.statue){
+                var annotations=[];
+                var objMsg=JSON.parse(ret.msg);
+                for (var o in objMsg) {
+
+                    var obj={
+                        id:100000+o,
+                        lon:objMsg[o].longitude,
+                        lat:objMsg[o].latitude
+                    };
+                    annotations.push(obj);
+                };
+                alert(JSON.stringify(annotations));
+
+                aMap.addAnnotations({
+                    annotations: annotations
+                }, function(ret) {
+                    alert(ret);
+                    if (ret.eventType == 'click') {
+                        alert(ret.id);
+                    }
+                });
+            };
+        });
     };
     </script>
 </html>

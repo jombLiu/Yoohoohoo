@@ -79,3 +79,10 @@ td,th {
 .loading_more:after {
 	content: '加载更多';	
 }
+/*custom common*/
+.grad{
+	background: -webkit-linear-gradient(left, #FD5419 , #FFA224); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #FD5419 , #FFA224); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #FD5419 , #FFA224); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right,  #FD5419 , #FFA224); /* standard */
+}
