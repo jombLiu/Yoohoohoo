@@ -198,10 +198,10 @@
             method: 'post',
             timeout:10
         }, function(ret, err) {
-
             if(ret.statue){
                 var annotations=[];
-                var objMsg=JSON.parse(ret.msg);
+                var objMsg=ret.msg;
+
                 for (var o in objMsg) {
 
                     var obj={
@@ -211,16 +211,16 @@
                     };
                     annotations.push(obj);
                 };
-                alert(JSON.stringify(annotations));
+                // alert(JSON.stringify(annotations));
 
-                aMap.addAnnotations({
-                    annotations: annotations
-                }, function(ret) {
-                    alert(ret);
-                    if (ret.eventType == 'click') {
-                        alert(ret.id);
-                    }
-                });
+                // aMap.addAnnotations({
+                //     annotations: annotations
+                // }, function(ret) {
+                //     alert(ret);
+                //     if (ret.eventType == 'click') {
+                //         alert(ret.id);
+                //     }
+                // });
             };
         });
     };
