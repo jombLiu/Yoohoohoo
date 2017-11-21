@@ -18,6 +18,7 @@
             openMap();
             addBackCenterListener();
             addChangeZoomListener();
+            getMessageList();
     	};
 
         function openMap(){
@@ -43,10 +44,34 @@
                 center: {
                     lon: lon,
                     lat: lat
+                    // lon: 116.297,
+                    // lat: 40.109
                 },
                 fixedOn: 'map_frame',
                 fixed: true
             });
+
+            // aMap.addAnnotations({
+            //     annotations: [{
+            //         id: 1111111,
+            //         lon: 116.297,
+            //         lat: 40.149
+            //     },{
+            //         id: 11111122,
+            //         lon: 116.297,
+            //         lat: 40.109
+            //     },{
+            //         id: 111111333,
+            //         lon: 116.237,
+            //         lat: 40.129
+            //     }],
+            //     icons: ['widget://image/littletrumpet.png'],
+            // }, function(ret) {
+                
+            //     if (ret.eventType == 'click') {
+            //         alert(ret.id);
+            //     }
+            // });
         
         };
         
@@ -96,6 +121,77 @@
                     }); 
                 });
                 
+            });
+        };
+
+        function getMessageList(){
+            api.ajax({
+                url: 'http://10.0.1.164:8080/Yoohoohoo/activity/allReport',
+                method: 'post',
+                timeout:10
+            }, function(ret, err) {
+                
+                if(ret.result){
+                    var annotations=[];
+                    var newList=[];
+                    var obj=ret.msg;
+                    for (var i in obj) {
+                        var newobj=obj[i];
+                        var position={
+                            id:12345+i,
+                            lon:newobj.longitude,
+                            lat:newobj.latitude
+                        };
+                        annotations.push(position);
+
+                        var message={
+                            id:12345+i,
+                            listId:newobj.id,
+                            userName:newobj.userName,
+                            topic:newobj.topic,
+                            content:newobj.content,
+                            lon:newobj.longitude,
+                            lat:newobj.latitude
+                        };
+                        newList.push(message);
+                        
+                    };
+                    setTimeout(showMessage,1000);
+                    function showMessage(){
+                        aMap.addAnnotations({
+                            annotations: annotations,
+                            icons: ['widget://image/littletrumpet.png']
+                        }, function(ret) {
+                            if (ret.eventType == 'click') {
+                                for (var i = 0; i < newList.length; i++) {
+                                    if (ret.id==newList[i].id) {
+                                        changeMessageProfile(newList[i]);
+                                        aMap.addAnnotations({
+                                            annotations: [{
+                                                id: 1234567890987654321,
+                                                lon: newList[i].lon,
+                                                lat: newList[i].lat
+                                            }],
+                                            icons: ['widget://image/bigtrumpet.png']
+                                        });
+                                        // clearInterval(timer);
+                                    };
+                                };
+                                
+                            };
+                        });
+                    }
+                    
+                };
+            });
+        };
+
+        function changeMessageProfile(option){
+            api.sendEvent({
+                name: 'changeMessage',
+                extra: {
+                    option:option
+                }
             });
         };
     </script>

@@ -83,10 +83,11 @@
 	        $api.fixStatusBar(header);
 	        headerH=$api.offset(header).h;
 	        footerH=$api.offset(footer).h;
-	        fnInitMessageDetail();
+            info=api.pageParam;
+	        fnInitMessageDetail(info);
     	};
 
-    	function fnInitMessageDetail(){
+    	function fnInitMessageDetail(infos){
 	        api.openFrame({
 	            name: 'message_detail_frame',
 	            url: './message_detail_frame.html',
@@ -97,7 +98,8 @@
 	                h: api.winHeight-headerH-footerH
 	            },
 	            vScrollBarEnabled:false,
-	            bounces: false
+	            bounces: false,
+                pageParam:infos
 	        });
 	    };
     </script>

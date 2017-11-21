@@ -196,24 +196,34 @@
 
                 if(topic.value!=""&&content.value!=""){
                     api.ajax({
-                        url: 'http://117.34.118.48:8080/Yoohoohoo/activity/insert',
+                        url: 'http://10.0.1.164:8080/Yoohoohoo/activity/insert',
                         method: 'post',
                         data: {
                             values: info
                         },
                         timeout:10
                     }, function(ret, err) {
-                        api.toast({
-                            msg: err.body,
-                            duration: 1500,
-                            location: 'middle'
-                        });
-                        setInterval(clseWin,2000)
-                        function clseWin(){
-                                api.closeWin({
-                                name: 'add_message'
+                         
+                        if(ret.result){
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 1500,
+                                location: 'middle'
                             });
-                        };
+                            var timer=setInterval(clseWin,2000)
+                            function clseWin(){
+                                api.closeWin({
+                                    name: 'add_message'
+                                });
+                                api.openWin({
+                                    name: 'main',
+                                    url: './main.html',
+                                    reload:true
+                                });
+                                clearInterval(timer);
+                            };
+                        }
+                        
                         
                     });
                 }else{

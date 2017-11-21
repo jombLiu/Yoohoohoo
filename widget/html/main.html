@@ -87,8 +87,9 @@
         fnInitMapZoom();
         
         fnInitMessageProfile();
-        getMessageList();
+        
         fnRegisterKeyBack();
+        
 
     };
     function initOpenMenu(){
@@ -192,37 +193,6 @@
 
 
 
-    function getMessageList(){
-        api.ajax({
-            url: 'http://10.0.1.139:8080/Yoohoohoo/activity/allReport',
-            method: 'post',
-            timeout:10
-        }, function(ret, err) {
-            if(ret.statue){
-                var annotations=[];
-                var objMsg=ret.msg;
-
-                for (var o in objMsg) {
-
-                    var obj={
-                        id:100000+o,
-                        lon:objMsg[o].longitude,
-                        lat:objMsg[o].latitude
-                    };
-                    annotations.push(obj);
-                };
-                // alert(JSON.stringify(annotations));
-
-                // aMap.addAnnotations({
-                //     annotations: annotations
-                // }, function(ret) {
-                //     alert(ret);
-                //     if (ret.eventType == 'click') {
-                //         alert(ret.id);
-                //     }
-                // });
-            };
-        });
-    };
+    
     </script>
 </html>
