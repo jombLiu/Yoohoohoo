@@ -160,7 +160,7 @@
                     function showMessage(){
                         aMap.addAnnotations({
                             annotations: annotations,
-                            icons: ['widget://image/littletrumpet.png']
+                            icons: ['widget://image/point_small.png']
                         }, function(ret) {
                             if (ret.eventType == 'click') {
                                 for (var i = 0; i < newList.length; i++) {
@@ -172,7 +172,7 @@
                                                 lon: newList[i].lon,
                                                 lat: newList[i].lat
                                             }],
-                                            icons: ['widget://image/bigtrumpet.png']
+                                            icons: ['widget://image/point_big.png']
                                         });
                                     };
                                 };
