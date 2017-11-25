@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="utf-8"/>
+        <meta content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" name="viewport"/>
+        <meta content="telephone=no,email=no,date=no,address=no" name="format-detection"/>
+        <title>Create message button</title>
+        <link href="../css/api.css" rel="stylesheet" type="text/css"/>
+        <style type="text/css">
+        	html,body{
+	        	height: 100%;
+	        	background-color: transparent;
+	        }
+	        .header_box{
+	        	width: 100%;
+	        	height: 44px;
+	            position: relative;
+	        }
+	        .header_box .menu{
+	            position: absolute;
+	            top:4px;
+	            left: 10px;
+	            height: 36px;
+	            width: 36px;
+	            border-radius: 50%;
+	            background:#fff url(../image/logo.png) no-repeat center center;
+	            background-size: auto 17px;
+	            box-shadow: 0 3px 5px -1px #aaa;
+	        }    
+	        .header_box .search{
+	        	box-sizing: border-box;
+	            height: 44px;
+	            width: 70%;
+	            margin: 0 auto;
+	            padding: 4px 0;
+	        }
+	        .header_box .search p{
+	        	box-sizing: border-box;
+	            height: 34px;
+	            line-height: 34px;
+	            width: 100%;
+	            padding:0 20px;
+	            margin: 0 auto;
+	            background-color: #fff;
+	            border-radius: 4px;
+	            box-shadow: 0 3px 5px -1px #aaa;
+	            color: #999;
+	        }
+	        .header_box .message{
+	        	position: absolute;
+	            top:4px;
+	            right:10px;
+	            height: 35px;width: 35px;
+	            border-radius: 50%;
+	            background:#fff url(../image/icon_message.png) no-repeat center center;
+	            background-size: auto 17px;
+	            box-shadow: 0 3px 5px -1px #aaa;
+	        }   
+	        .header_box .search p.active{
+	        	background-color: #ccc;
+	        }
+        </style>
+    </head>
+<body>
+    <header class="header" id="header">
+        <div class="header_box">
+            <div class="menu" tapmode onclick="initOpenMenu()">
+            </div>
+            <div class="search">
+            	<p tapmode="active" id="search" onclick="openMapSearchWin()">查询活动地点</p>
+            </div>
+            <div class="message">
+            </div>
+        </div>
+    </header>
+</body>
+<script src="../script/api.js" type="text/javascript"></script>
+<script type="text/javascript">
+	var header,headerH,search;
+	apiready = function(){
+	    header=$api.byId('header');
+	    search=$api.byId('search');
+        $api.fixStatusBar(header);
+        headerH=$api.offset(header).h;
+        addCurrentLocationListener(); 
+	};
+
+    function initOpenMenu(){
+        api.openFrame({
+            name: 'menu_frame',
+            url: './menu_frame.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: "auto",
+                h: "auto"
+            },
+            animation:{
+                type:'movein',
+                subType :'from_left'
+            },
+            bounces: false
+        });
+    };
+    function openMapSearchWin(){
+    	api.openWin({
+    	    name: 'map_search',
+    	    url: './map_search.html',
+    	    animation:{
+                type:'movein',
+                subType :'from_bottom'
+            },
+            bounces: false
+    	});
+    };
+    function addCurrentLocationListener(){
+    	api.addEventListener({
+            name: 'sendCurrentLocation'
+        }, function(ret, err) {
+            
+            var newret=ret.value.option;
+            $api.text(search, newret.name);
+            search.style.color="#ffa322";
+        });
+    };
+</script>
+</html>

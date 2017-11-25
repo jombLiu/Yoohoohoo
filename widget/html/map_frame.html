@@ -19,6 +19,7 @@
             addBackCenterListener();
             addChangeZoomListener();
             getMessageList();
+            addBackCurrentLocationListener();
     	};
 
         function openMap(){
@@ -44,34 +45,25 @@
                 center: {
                     lon: lon,
                     lat: lat
-                    // lon: 116.297,
-                    // lat: 40.109
                 },
                 fixedOn: 'map_frame',
                 fixed: true
             });
 
-            // aMap.addAnnotations({
-            //     annotations: [{
-            //         id: 1111111,
-            //         lon: 116.297,
-            //         lat: 40.149
-            //     },{
-            //         id: 11111122,
-            //         lon: 116.297,
-            //         lat: 40.109
-            //     },{
-            //         id: 111111333,
-            //         lon: 116.237,
-            //         lat: 40.129
-            //     }],
-            //     icons: ['widget://image/littletrumpet.png'],
-            // }, function(ret) {
-                
-            //     if (ret.eventType == 'click') {
-            //         alert(ret.id);
-            //     }
-            // });
+            aMap.addCircle({
+                id: 0000000123456789,
+                center: {
+                    lon: lon,
+                    lat: lat,
+                },
+                radius: 400,
+                styles: {
+                    borderColor: '#0060ff',
+                    borderWidth: 3,
+                    lineDash: true,
+                    fillColor: 'rgba(0,96,255,0.2)'
+                }
+            });
         
         };
         
@@ -193,5 +185,26 @@
                 }
             });
         };
+        function addBackCurrentLocationListener(){
+            api.addEventListener({
+                name: 'sendCurrentLocation'
+            }, function(ret, err) {
+                
+                var newret=ret.value.option;
+                aMap.setCenter({
+                    coords: {
+                        lon: newret.lon,
+                        lat: newret.lat
+                    }
+                });
+                aMap.addAnnotations({
+                    annotations: [{
+                        id: 22222222987654321,
+                        lon: newret.lon,
+                        lat: newret.lat
+                    }]
+                });
+            });
+        }
     </script>
 </html>

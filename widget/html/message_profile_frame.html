@@ -9,16 +9,23 @@
         <link href="../css/api.css" rel="stylesheet" type="text/css"/>
         <style type="text/css">
             html,body{
-	        	height: 100%;
+                width:100%;
 	        	background-color: transparent;
 	        }
-            body{
-                padding: 0 10px 10px;
-                box-sizing: border-box; 
+            .message_profile{
+                width:100%;
+                overflow: hidden;
+            }
+            .message_box{
+                width:300%;
+                margin-left: -82.06%;
+                overflow: hidden;
             }
             .message{
-	            height: 100%;
-	            width: 100%;
+                float: left;
+	            height: 70px;
+	            width: 27.573333333%;
+                margin:0 0.87999999%;
 	            background-color: #fff;
 	            box-shadow: 0 2px 5px -1px #ccc;
                 position: relative;
@@ -29,29 +36,18 @@
                 top:0;
                 left:0;
                 height: 100%;
-                width: 70px;
-                padding: 18px 10px 0;
+                width: 90px;
+                padding: 10px 10px 10px 20px;
             }
-            .left .user_img{
-                width: 50px;
+            .left .profile_img{
+                width: 56px;
                 height: 50px;
-                border-radius: 50%;
                 background: url(../image/logo.png) no-repeat center center;
                 background-size: auto 25px;
                 box-shadow: 0 1px 5px -1px #ccc;
             }
-            .left .user_name{
-                width: 100%;
-                height: 36px;line-height: 36px;
-                text-align: center;
-                white-space: nowrap;
-                overflow:hidden; 
-                text-overflow:ellipsis;
-                font-size: 12px;
-                color: #666;
-            }
             .content{
-                margin-left: 70px;
+                margin-left: 90px;
                 padding: 12px 6px;
             }
             .content h2{
@@ -63,11 +59,11 @@
             }
             .content p{
                 font-size: 12px;
+                height: 18px;
                 line-height: 18px;
                 color: #828282;
-                display: -webkit-box;
-                -webkit-box-orient: vertical;
-                -webkit-line-clamp: 3;
+                white-space: nowrap;
+                text-overflow: ellipsis;
                 overflow: hidden;
             }
             .active{
@@ -78,14 +74,35 @@
         </style>
     </head>
     <body>
-        <div class="message" tapmode="active" onclick="openMessageDetail()">
-            <div class="left">
-                <div class="user_img"></div>
-                <div class="user_name" id="userName">发布者</div>
-            </div>
-            <div class="content">
-                <h2 id="topic">主题</h2>
-                <p id="content">活动内容...</p>
+        <div class="message_profile">
+            <div class="message_box">
+                <div class="message" tapmode="active" onclick="openMessageDetail()">
+                    <div class="left">
+                        <div class="profile_img"></div>
+                    </div>
+                    <div class="content">
+                        <h2 class="topic">主题</h2>
+                        <p class="content">活动内容...</p>
+                    </div>
+                </div>
+                <div class="message" tapmode="active" onclick="openMessageDetail()">
+                    <div class="left">
+                        <div class="profile_img"></div>
+                    </div>
+                    <div class="content">
+                        <h2 id="topic">主题</h2>
+                        <p id="content">活动内容...</p>
+                    </div>
+                </div>
+                <div class="message" tapmode="active" onclick="openMessageDetail()">
+                    <div class="left">
+                        <div class="profile_img"></div>
+                    </div>
+                    <div class="content">
+                        <h2 class="topic">主题</h2>
+                        <p class="content" ="content">活动内容...</p>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
@@ -93,7 +110,6 @@
     <script type="text/javascript">
         var message,messageId,userName,topic,content;
         apiready = function(){
-            userName=$api.byId('userName');
             topic=$api.byId('topic');
             content=$api.byId('content');
             message=$api.dom(".message");
@@ -106,7 +122,6 @@
                 if (ret) {
                     var newret=ret.value.option;
                     $api.attr(message, 'id',newret.listId);
-                    $api.text(userName, newret.userName);
                     $api.text(topic, newret.topic);
                     $api.text(content, newret.content);
                 }

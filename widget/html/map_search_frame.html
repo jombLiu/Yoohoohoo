@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="utf-8"/>
+        <meta content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" name="viewport"/>
+        <meta content="telephone=no,email=no,date=no,address=no" name="format-detection"/>
+        <title>Map search</title>
+        <link href="../css/api.css" rel="stylesheet" type="text/css"/>
+        <style>
+	        html,body{
+	            height: 100%;
+	            position: relative;
+	        }
+	        .main{
+	        	width: 100%;
+	        	background-color: #fff;
+	        }
+	        .main .list_box{
+	        	box-sizing: border-box;
+	        	padding-left:50px;
+	        	background:url(../image/point.png) no-repeat 15px center;
+        		background-size: 14px;
+	        }
+	        .main .active{
+	        	background-color: #ccc;
+	        }
+	        .main .list{
+	        	box-sizing: border-box;
+	        	padding: 10px 50px 10px 0;
+	        	border-bottom: 1px solid #f3f3f3;
+	        	background:url(../image/icon_select.png) no-repeat 95% center;
+	        	background-size: 20px;
+	        }
+	        .main .list .name{
+	        	height: 20px;
+	        	font-size: 14px;
+	        	line-height: 20px;
+	        	color: #666;
+	        	white-space: nowrap;
+	        	text-overflow: ellipsis;
+	        	overflow: hidden;
+	        }
+	        .main .list .address{
+	        	height: 20px;
+	        	font-size: 12px;
+	        	line-height: 20px;
+	        	color: #999;
+	        	white-space: nowrap;
+	        	text-overflow: ellipsis;
+	        	overflow: hidden;
+	        }
+	        .loading{
+	        	position: absolute;
+	        	top:0;left: 0;right: 0;bottom: 0;
+	        	width: 80px;
+	        	height: 80px;
+	        	border-radius: 6px;
+	        	margin:auto;
+	        	background:rgba(0,0,0,.2) url(../image/loading_more.gif) no-repeat center center;
+	        	background-size: 50px;
+	        	display: none;
+	        }
+        </style>
+    </head>
+	<body>
+	    <div class="main" id="main">
+	    </div>
+	    <div class="loading" id="loading"></div>
+	</body>
+	<script src="../script/api.js" type="text/javascript">
+    </script>
+	<script type="text/javascript">
+		var main,loading;
+		apiready = function(){
+			main=$api.byId('main');
+			loading=$api.byId('loading');
+		    getSearchlocation();
+		};
+	    function getSearchlocation(){
+	    	api.addEventListener({
+	    	    name: 'showLoading'
+	    	}, function(ret, err) {
+	    	    if (ret) {
+	    	        $api.css(loading, ret.value.option);
+	    	    }
+	    	});
+	        api.addEventListener({
+	            name: 'searchPostion'
+	        }, function(ret, err) {
+	            if (ret) {
+	                var newret=ret.value.option;
+	                var content="";
+	                for (var i = 0; i < newret.length; i++) {
+	                	
+	                	content+='<div class="list_box" tapmode="active" onclick="goCurrentLoaction(\''+
+	                	newret[i].name+'\','+newret[i].lon+','+newret[i].lat+')"><div class="list">'+
+			    		'<div class="name">'+newret[i].name+'</div>'+
+			    		'<div class="address">'+newret[i].address+'</div>'+
+			    		'</div></div>';
+	                };
+	                $api.html(main, content);
+	                $api.css(loading, 'display: none;');
+	            };
+	        });
+	    };
+
+	    function goCurrentLoaction(name,lon,lat){
+	    	var option={
+	    		name:name,
+	    		lon:lon,
+	    		lat:lat
+	    	};
+	    	api.sendEvent({
+                name: 'sendCurrentLocation',
+                extra: {
+                    option:option
+                }
+            });
+            api.closeWin({
+	    	    name: 'map_search'
+	    	});
+	    };
+	</script>
+</html>
